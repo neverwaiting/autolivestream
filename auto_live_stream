@@ -12,7 +12,8 @@ install_ffmpeg() {
   tar -xJf ffmpeg-4.0.3-64bit-static.tar.xz && \
 	cd ffmpeg-4.0.3-64bit-static && \
   cp ffmpeg ffprobe qt-faststart ffmpeg-10bit /usr/bin && \
-  echo "ffmpeg have installed!" # && rm -rf "$ffmpeg_dir"
+  echo "ffmpeg have installed! please restart this script to live stream!" # && rm -rf "$ffmpeg_dir"
+  exit
 }
 
 [ -n "$(command -v ffmpeg)" ] || install_ffmpeg

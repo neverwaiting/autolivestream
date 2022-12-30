@@ -1,0 +1,32 @@
+#!/bin/sh
+
+video_dir="$HOME/videos"
+
+install_ffmpeg() {
+  [ "$(whoami)" != "root" ] && echo "make sure user is root" && exit 1
+  echo "install ffmpeg..."
+  # ffmpeg_dir="ffmpeg"
+  # [ -d "$ffmpeg_dir" ] || mkdir $ffmpeg_dir
+  # cd $ffmpeg_dir
+  # curl -LO https://www.johnvansickle.com/ffmpeg/old-releases/ffmpeg-4.0.3-64bit-static.tar.xz && \
+  tar -xJf ffmpeg-4.0.3-64bit-static.tar.xz && \
+	cd ffmpeg-4.0.3-64bit-static && \
+  cp ffmpeg ffprobe qt-faststart ffmpeg-10bit /usr/bin && \
+  echo "ffmpeg have installed!" # && rm -rf "$ffmpeg_dir"
+}
+
+[ -n "$(command -v ffmpeg)" ] || install_ffmpeg
+
+while true; do
+  read -p "please input your rtmp: " rtmp
+  [[ ${rtmp} =~ "rtmp://" ]] && break
+  echo "invalid rtmp protocol!"
+done
+
+while true; do
+  for video in $(find "$video_dir" -type f -name *.mp4 | shuf); do
+    echo "Playing video $video"
+    ffmpeg -re -i "$video" -preset ultrafast -vcodec libx264 -g 60 -b:v 6000k -c:a aac -b:a 128k -strict -2 -f flv ${rtmp}
+    # ffmpeg -re -i "$video" -c:v copy -c:a aac -b:a 192k -strict -2 -f flv ${rtmp} || exit
+  done
+done

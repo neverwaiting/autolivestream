@@ -1,5 +1,7 @@
 #!/bin/sh
 
+IFS=$'\n'
+
 video_dir="$HOME/videos"
 
 install_ffmpeg() {
